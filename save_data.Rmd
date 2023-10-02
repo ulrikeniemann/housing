@@ -95,9 +95,12 @@ were mergers in 2011, 2015 and 2018. So we need to account for these localities.
 We’re now scraping data from wikipedia of former Luxembourguish communes:
 
 ```{r}
-get_former_communes <- function(url = "https://en.wikipedia.org/wiki/Communes_of_Luxembourg#Former_communes",
-                                min_year = 2009,
-                                table_position = 3){
+get_former_communes <- function(
+            url = "https://is.gd/lux_former_communes",
+            min_year = 2009,
+            table_position = 3
+            ){
+
   read_html(url) %>%
     html_table() %>%
     pluck(table_position) %>%
@@ -114,12 +117,19 @@ former_communes <- get_former_communes()
 We can scrape current communes:
 
 ```{r}
-get_current_communes <- function(url = "https://en.wikipedia.org/wiki/List_of_communes_of_Luxembourg",
-                                 table_position = 1){
-  read_html(url) %>%
-    html_table() %>%
-    pluck(table_position) %>%
-    clean_names()
+get_current_communes <- function(
+                 url = "https://is.gd/lux_communes",
+                 table_position = 2
+                 ){
+
+  read_html(url) |>
+    html_table() |>
+    pluck(table_position) |>
+    clean_names() |>
+    filter(name_2 != "Name") |>
+    rename(commune = name_2) |>
+    mutate(commune = str_remove(commune, " .$"))
+
 }
 
 ```
@@ -141,7 +151,7 @@ get_test_communes <- function(former_communes, current_communes){
   communes[which(communes == "Clemency")] <- "Clémency"
   communes[which(communes == "Redange")] <- "Redange-sur-Attert"
   communes[which(communes == "Erpeldange-sur-Sûre")] <- "Erpeldange"
-  communes[which(communes == "Luxembourg-City")] <- "Luxembourg"
+  communes[which(communes == "Luxembourg City")] <- "Luxembourg"
   communes[which(communes == "Käerjeng")] <- "Kaerjeng"
   communes[which(communes == "Petange")] <- "Pétange"
 
@@ -206,9 +216,9 @@ commune_level_data <- make_commune_level_data(flat_data)
 ```
 
 We now save the dataset in a folder for further analysis (keep chunk option to
-`eval = F` to avoid running it when knitting):
+`eval = FALSE` to avoid running it when knitting):
 
-```{r, eval = F}
+```{r, eval = FALSE}
 write.csv(commune_level_data,
           "datasets/house_prices_commune_level_data.csv",
           row.names = FALSE)
