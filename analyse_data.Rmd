@@ -1,0 +1,70 @@
+---
+title: "Nominal house prices data in Luxembourg"
+author: "Bruno Rodrigues"
+date: "`r Sys.Date()`"
+---
+
+```{r, messages = FALSE}
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(tidyr)
+```
+
+Let’s load the datasets:
+
+```{r}
+commune_level_data <- read.csv(
+  "../datasets/house_prices_commune_level_data.csv"
+)
+
+country_level_data <- read.csv(
+  "../datasets/house_prices_country_level_data.csv"
+)
+```
+
+
+
+Let’s also compute it for the whole country:
+
+```{r}
+country_level_data <- get_laspeyeres(country_level_data)
+
+```
+
+We are going to create a plot for 5 communes and compare the price evolution in the communes
+to the national price evolution. Let’s first list the communes:
+
+```{r}
+communes <- c("Luxembourg",
+              "Esch-sur-Alzette",
+              "Mamer",
+              "Schengen",
+              "Wincrange")
+
+```
+
+
+
+```{r, results = "asis"}
+res <- lapply(communes, function(x){
+
+  knitr::knit_child(text = c(
+
+    '\n',
+    '## Plot for commune: `r x`',
+    '\n',
+    '```{r, echo = F}',
+    'print(make_plot(x))',
+    '```'
+
+     ),
+     envir = environment(),
+     quiet = TRUE)
+
+})
+
+cat(unlist(res), sep = "\n")
+
+```
+
