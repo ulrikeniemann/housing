@@ -1,0 +1,10 @@
+^dev$
+^\.here$
+^LICENSE\.md$
+^README\.Rmd$
+^contact@fake\.com$
+^housing\.Rproj$
+^\.Rproj\.user$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
