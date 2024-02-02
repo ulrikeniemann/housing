@@ -371,7 +371,8 @@ get_laspeyeres <- function(dataset){
 test_that("Wrong data", {
 
   expect_error(
-    get_laspeyeres(mtcars)
+    get_laspeyeres(mtcars),
+    regexp = "dataset must be one of"
   )
 
 })
@@ -409,8 +410,11 @@ test_that("get_laspeyeres() produces correct results", {
   expected_df$pl <- expected_df$average_price_nominal_euros / expected_df$p0 * 100
   expected_df$pl_m2 <- expected_df$average_price_m2_nominal_euros / expected_df$p0_m2 * 100
 
+  # rename data to make assertion pass # test_that("Wrong data"
+  commune_level_data <- input_df
+  
   expect_equivalent(
-    expected_df, get_laspeyeres(input_df)
+    expected_df, get_laspeyeres(commune_level_data)
   )
 
 })
