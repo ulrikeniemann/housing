@@ -330,6 +330,12 @@ get_laspeyeres <- function(dataset){
 
   which_dataset <- deparse(substitute(dataset))
 
+  stopifnot("dataset must be one of `commune_level_data`
+             or `country_level_data`" =
+              (which_dataset %in% c(
+                 "commune_level_data",
+                 "country_level_data")))
+
   group_var <- if(grepl("commune", which_dataset)){
                  quo(locality)
                } else {
@@ -337,13 +343,24 @@ get_laspeyeres <- function(dataset){
                }
   dataset |>
     group_by(!!group_var) |>
-    mutate(p0 = ifelse(year == "2010", average_price_nominal_euros, NA)) |>
+    mutate(
+      p0 = ifelse(
+        year == "2010",
+        average_price_nominal_euros,
+        NA)
+    ) |>
     fill(p0, .direction = "down") |>
-    mutate(p0_m2 = ifelse(year == "2010", average_price_m2_nominal_euros, NA)) |>
+    mutate(
+      p0_m2 = ifelse(
+        year == "2010",
+        average_price_m2_nominal_euros,
+        NA)
+    ) |>
     fill(p0_m2, .direction = "down") |>
     ungroup() |>
-    mutate(pl = average_price_nominal_euros/p0*100,
-           pl_m2 = average_price_m2_nominal_euros/p0_m2*100)
+    mutate(
+      pl = average_price_nominal_euros/p0*100,
+      pl_m2 = average_price_m2_nominal_euros/p0_m2*100)
 
 }
 ```
