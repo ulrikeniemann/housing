@@ -1,0 +1,26 @@
+{
+    "id": "B4A46C92",
+    "path": "~/R/housing/targets-package-chapter-13.R",
+    "project_path": "targets-package-chapter-13.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": true,
+    "created": 1711640782020.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "38,0",
+        "scrollLine": "13"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1711640647,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1711640856678,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -1,0 +1,16 @@
+# initialise targets
+targets::tar_script()
+remotes::install_github(
+"ulrikeniemann/housing"
+)
+library(housing)
+# first, we need to load the data
+# data are part of the housing-package
+data(commune_level_data)
+data("country_level_data")
+x <- data("mtcars")
+renv:init()
+renv::init()
+install.packages("renv")
+# init renv
+renv::init()

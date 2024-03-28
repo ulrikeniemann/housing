@@ -1,0 +1,81 @@
+library(targets)
+library(tarchetypes)
+# This is an example _targets.R file. Every
+# {targets} pipeline needs one.
+# Use tar_script() to create _targets.R and tar_edit()
+# to open it again for editing.
+# Then, run tar_make() to run the pipeline
+# and tar_read(data_summary) to view the results.
+
+# Define custom functions and other global objects.
+# This is where you write source(\"R/functions.R\")
+# if you keep your functions in external scripts.
+source("functions/read_data.R")
+
+# Set target-specific options such as packages:
+# tar_option_set(packages = "utils") # nolint
+tar_option_set(packages = "housing")
+
+# End this file with a list of target objects.
+list(
+  tar_target(
+    commune_level_data,
+    read_data("commune_level_data",
+              "housing")
+  ),
+  
+  tar_target(
+    country_level_data,
+    read_data("country_level_data",
+              "housing")
+  ),
+  
+  tar_target(
+    commune_data,
+    get_laspeyeres(commune_level_data)
+  ),
+  
+  tar_target(
+    country_data,
+    get_laspeyeres(country_level_data)
+  ),
+  
+  tar_target(
+    communes,
+    c("Luxembourg",
+      "Esch-sur-Alzette",
+      "Mamer",
+      "Schengen",
+      "Wincrange")
+  ),
+  
+  tar_render(
+    analyse_data,
+    "analyse_data.Rmd"
+  )
+  
+)
+
+
+# ..............................................................................
+# start pipeline!
+#targets::tar_make()
+
+targets::tar_visnetwork()
+
+# Load every target at once
+targets::tar_load_everything()
+
+# get meta data
+tar_meta()
+# get warnings
+tar_meta(fields = warnings, complete_only = TRUE)
+
+# Make a target (or the whole pipeline) outdated
+tar_invalidate()
+
+# complete nuke the whole pipeline and rerun it from scratch using 
+tar_destroy()
+
+# customize network visualisation
+visNetwork::visNetworkEditor(tar_visnetwork())

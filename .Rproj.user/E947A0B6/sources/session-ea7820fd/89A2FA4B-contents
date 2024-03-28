@@ -1,0 +1,36 @@
+# ..............................................................................
+
+# install package from github - see chapter 11
+install.packages("remotes")
+
+remotes::install_github(
+  "ulrikeniemann/housing"
+)
+library(housing)
+
+# ..............................................................................
+
+# initialise targets
+targets::tar_script()
+
+
+# first, we need to load the data
+# data are part of the housing-package
+#data(commune_level_data)    # but this is only promise, not good for targets
+#data("country_level_data")
+
+
+# we need a pure function which return a data.frame
+# read_data <- function(data_name, package_name){
+#   
+#   temp <- new.env(parent = emptyenv())
+#   
+#   data(list = data_name,
+#        package = package_name,
+#        envir = temp)
+#   
+#   get(data_name, envir = temp)
+# }
+
+#source("functions/read_data.R")
+

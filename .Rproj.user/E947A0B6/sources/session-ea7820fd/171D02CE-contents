@@ -1,0 +1,142 @@
+# ..............................................................................
+# start
+# libs only for start (possibly not available in pipeline)
+library(targets)
+library(future)
+library(future.callr)
+plan(callr)
+# This is an example _targets.R file. Every
+# {targets} pipeline needs one.
+# Use tar_script() to create _targets.R and tar_edit()
+# to open it again for editing.
+# Then, run tar_make() to run the pipeline
+# and tar_read(summary) to view the results.
+
+# ..............................................................................
+# 1)
+# functions needed in pipeline
+# Define custom functions and other global objects.
+# This is where you write source(\"R/functions.R\")
+# if you keep your functions in external scripts.
+# summ <- function(dataset) {
+#   summarize(dataset, mean_x = mean(x))
+# }
+# edit
+# summarize_data <- function(dataset) {
+#   colMeans(dataset)
+# }
+
+# workaround save plot
+save_plot <- function(filename, ...){
+  
+  png(filename = filename)
+  plot(...)
+  dev.off()
+   # return filename
+  filename
+  
+}
+# path_data <- function(path){
+#   path
+# }
+
+# Sometimes you gotta take your time
+slow_summary <- function(...) {
+  Sys.sleep(30)
+  summary(...)
+}
+
+# ..............................................................................
+# 2)
+# libs needed in pipeline
+# loaded in pipeline-environment
+# Set target-specific options such as packages.
+tar_option_set(packages = "dplyr")
+
+# ..............................................................................
+# 3)
+# pipeline itselfs
+# End this file with a list of target objects.
+# edit
+# list(
+#   tar_target(data, data.frame(x = sample.int(100), y = sample.int(100))),
+#   
+#   tar_target(data_summary, summarize_data(data)), # Call your custom functions 
+#   
+#   tar_target(
+#     data_plot,
+#     save_plot(
+#       filename = "my_plot.png",
+#       data),
+#     format = "file")
+# )
+list(
+  tar_target(
+    path_data_mtcars,
+    "mtcars.csv",
+    format = "file"
+  ),
+  tar_target(
+    data_iris,
+    data("iris")
+  ),
+  tar_target(
+    summary_iris,
+    slow_summary(data_iris)
+  ),
+  tar_target(
+    data_mtcars,
+    read.csv(path_data_mtcars)
+  ),
+  tar_target(
+    summary_mtcars,
+    slow_summary(data_mtcars)
+  ),
+  tar_target(
+    list_summaries,
+    list(
+      "summary_iris" = summary_iris,
+      "summary_mtcars" = summary_mtcars
+    )
+  ),
+  tar_target(
+    plot_mtcars,
+    save_plot(
+      filename = "mtcars_plot.png",
+      data_mtcars),
+    format = "file")
+)
+
+# ..............................................................................
+# start pipeline
+#targets::tar_make()
+
+# load output
+#targets::tar_load(summary)
+#targets::tar_load(data_summary)
+#targets::tar_load(everything())
+# targets::tar_load(data_plot)
+
+# data(mtcars)
+# write.csv(mtcars, "mtcars.csv", row.names = FALSE)
+
+
+#targets::tar_visnetwork()
+
+# To re-run the pipeline completely from scratch, call tar_destroy(). 
+# This will make all the targets outdated. Then, run the pipeline 
+# from scratch with tar_make()
+
+# run this pipeline in parallel: 
+# tar_destroy()
+
+#tar_make_future()
+
+# Set workers = 2 to use 2 cpu cores
+#targets::tar_make_future(workers = 2)
+
+#tar_config_get("reporter_make")
+
+# ..............................................................................
+# ..............................................................................
+# ..............................................................................
